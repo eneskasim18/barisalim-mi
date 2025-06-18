@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barışalım mı Aleyna Begüm Kasım?</title>
+    <style>
+        body {
+            background: #ffe4e9;
+            font-family: 'Varela Round', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100vw;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.6rem;
+            color: #e74c3c;
+            margin-bottom: 32px;
+            margin-top: 0;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 28px;
+            width: 100%;
+            z-index: 2;
+            position: relative;
+        }
+
+        .btn {
+            background: #ff6392;
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 22px;
+            font-weight: 600;
+            padding: 18px 44px;
+            margin-top: 10px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px #ff639288;
+            transition: all 0.22s cubic-bezier(.55, 1.35, .71, 1.12);
+            z-index: 2;
+            outline: none;
+            position: relative;
+        }
+
+        .btn-yes {
+            background: #fa4775;
+            font-size: 22px;
+            z-index: 2;
+        }
+
+        .btn-no {
+            background: #fbb1c4;
+            color: #be1d49;
+        }
+
+        #noPrompt {
+            margin: 0 auto 0 auto;
+            min-height: 36px;
+            font-size: 1.23rem;
+            color: #b8144d;
+            font-weight: 500;
+            transition: all 0.15s;
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+            z-index: 1;
+            position: relative;
+        }
+
+        /* Evet devleşirse */
+        .fullscreen-yes {
+            position: fixed !important;
+            left: 0;
+            top: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            font-size: 2.7rem !important;
+            border-radius: 0 !important;
+            z-index: 99 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all .6s cubic-bezier(.8, 2, .2, 1);
+            background: #fa4775 !important;
+        }
+
+        #finalMessage {
+            font-size: 2.2rem;
+            color: #e12255;
+            text-align: center;
+            margin-top: 38px;
+            font-weight: 700;
+            animation: pop .8s;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.09);
+            }
+
+            80% {
+                transform: scale(0.97);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .content-wrapper {
+                max-width: 99vw;
+            }
+
+            .btn-row {
+                flex-direction: column;
+                gap: 18px;
+                width: 100%;
+            }
+
+            #noPrompt {
+                max-width: 99vw;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content-wrapper">
+        <h1>Barışalım mı Aleyna Begüm Kasım ?</h1>
+        <div class="btn-row" id="btnRow">
+            <button class="btn btn-yes" id="yesBtn" onclick="handleYes()">Evet</button>
+            <button class="btn btn-no" id="noBtn" onclick="handleNo()">Hayır</button>
+        </div>
+        <div id="noPrompt"></div>
+        <div id="finalMessage"></div>
+    </div>
+
+    <script>
+        // Hayır'a basınca gösterilecek farklı formatlarda "emin misin" mesajları
+        const noPrompts = [
+            "Emin misin? 🥺",
+            "Bir daha düşün! 😢",
+            "Cidden mi ya... 😳",
+            "Vallahi kırılırım bak 🙁",
+            "Gerçekten hayır mı? 😔",
+            "Son kararın mı? 😬",
+            "Bak, çok üzüldüm... 😭",
+            "Bir şans daha vermez misin? 💔"
+        ];
+        let noCount = 0;
+
+        function handleNo() {
+            noCount++;
+            const prompt = noPrompts[(noCount - 1) % noPrompts.length];
+            document.getElementById("noPrompt").textContent = prompt;
+
+            // Evet butonunu büyüt
+            const yesBtn = document.getElementById("yesBtn");
+            if (noCount < 8) {
+                let scale = 1 + noCount * 0.18;
+                yesBtn.style.transform = `scale(${scale})`;
+                yesBtn.style.fontSize = `${22 + noCount * 5}px`;
+                yesBtn.style.padding = `${18 + noCount * 3}px ${44 + noCount * 12}px`;
+                // buton-row'un margin-bottom'unu butonun yüksekliğine göre artır
+                document.getElementById("btnRow").style.marginBottom = `${28 + noCount * 20}px`;
+            }
+
+            // 8. kez hayıra basılırsa:
+            if (noCount >= 8) {
+                // Evet butonunu dev yap, hayırı ve promptu sil
+                yesBtn.textContent = "Evet, barışmak istiyorum! 💖";
+                yesBtn.classList.add("fullscreen-yes");
+                document.getElementById("noBtn").style.display = "none";
+                document.getElementById("noPrompt").style.display = "none";
+                // extra: btn-row margin sıfırlansın
+                document.getElementById("btnRow").style.marginBottom = "0";
+            }
+        }
+
+        function handleYes() {
+            if (noCount < 8) {
+                // Erken evet basıldıysa güzel bir mesaj, animasyon
+                document.getElementById("finalMessage").innerHTML =
+                    "🎉 Sen harikasın! İyi ki barıştık <br> <span style='font-size:2rem;'>💞</span>";
+                document.getElementById("btnRow").style.display = "none";
+                document.getElementById("noPrompt").style.display = "none";
+            } else {
+                // Zorunlu evet! :) Final mesajı daha coşkulu
+                document.getElementById("finalMessage").innerHTML =
+                    "💌 İstesen de istemesen de artık barıştık! <br> Seni çok seviyorum Aleyna Begüm Kasım. <br> <span style='font-size:3rem;'>❤️💍💞</span><br> Sonsuza kadar beraberiz!";
+                document.getElementById("btnRow").style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+</html>
